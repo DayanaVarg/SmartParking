@@ -1,0 +1,138 @@
+
+/*Tabla*/
+
+.contT{
+	overflow-y: scroll;
+	overflow-x: scroll;
+}
+
+/*titulo*/
+
+.titulo{
+    margin-left: 10px;
+	font-size: 23px;
+	font-weight: 1000;
+	letter-spacing: 2px;
+	color: var(--color1);
+}
+
+
+/*texto izquierda*/
+.dataTable-top > div:first-child{
+    margin-top: 12px;
+	font-size: 14px;
+}
+
+/*Selector*/
+.dataTable-selector{
+	padding:6px;
+	border-radius: 10px;
+	width: 160px;
+	border: 1px solid var(--color1);
+}
+.dataTable-selector:focus{
+	border-color: var(--color2);
+	background-color: var(--colorWhite);
+	box-shadow: 0 0 8px 3px var(--color2);
+
+}
+/*casilla buscar*/
+.dataTable-input{
+	font-size: 13px;
+    width: 320px;
+	height: 30px;
+	padding-left: 2.5rem;
+	border-radius: 20px;
+	border: 1px solid var(--color2);
+	transition: .3s ease;
+
+}
+.dataTable-input::placeholder {
+	color: var(--color1);
+}
+
+.dataTable-input:focus, .dataTable-input:hover {
+	outline: none;
+	border-color:var(--color1);
+	background-color:var(--colorWhite);
+	box-shadow: 0 0 4px 3px var(--color3);
+}
+
+/*parte de abajo*/
+.dataTable-info{
+	margin:2px 0;
+}
+
+.dataTable-sorter::before{
+	border-top:4px solid #000;
+	bottom:2px
+}
+
+.dataTable-sorter::after{
+	border-bottom:4px solid #000;
+	border-top:4px solid transparent;
+	top:-2px
+}
+
+.contT::-webkit-scrollbar{
+	width: 7px;
+	position: absolute;
+}
+
+.contT::-webkit-scrollbar-thumb{
+	background: #a7a7a7;
+	border-radius: 50px;
+}
+
+.contT thead{
+	height: 50px;
+	background: var(--color4);
+}
+.t{
+	border-top-left-radius: 5rem;
+}
+
+.table .contT thead th {
+	color: var(--colorWhite);
+	text-align: center;
+	letter-spacing: 2px;
+	font-weight: bold;
+	font-size: 15px;
+	padding-bottom: 12px;
+}
+
+
+.table .contT tbody td {
+	padding-top: 15px;
+	align-items: baseline;
+	text-align: center;
+	font-size: 13px;
+	font-weight: 500;
+	background: var(--container-color);
+	border: 1px solid rgb(249, 244, 244);
+}
+
+
+/*button*/
+
+.table .contT tbody td .button1{
+	margin-top: -10px;
+	position: relative;
+	padding: 10px 13px 10px 13px;
+	border: none;
+	background: var(--colorL);
+	border-radius: 2rem;
+	font-family: var(--body-font);
+	color:var(--color1);
+	font-size: 14px;
+}
+
+.table.contT tbody td .btnact{
+	width: 60%;
+	background: var(--colorVe);
+}
+
+table.contT tbody td .btnelm{
+	width: 70%;
+	background: var(--colorGr);
+}
