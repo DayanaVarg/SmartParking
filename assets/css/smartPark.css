@@ -267,7 +267,7 @@ body{
     height: 545px;
 }
 
-form{
+.form{
     box-shadow: 3px 4px 9px 1px rgba(0, 0, 0, 0.2);
     width: 100%;
     height: 100%;
@@ -461,6 +461,20 @@ form{
 }
 
 /*------------------------------- Historial Vehículos ---------------------------------*/
+
+.btnElm{
+    height: 35px;
+    width: 120px;
+	margin-top: -10px;
+	text-align: center;
+	border: none;
+	border-radius: 2rem;
+	font-family: var(--body-font);
+	color:var(--colorWhite);
+	font-size: 14px;
+	cursor: pointer;
+    background: var(--colorGrey);
+}
 .btnOp{
     display: flex;
     flex-direction: row;
@@ -542,20 +556,6 @@ form{
 .btnAct img{
 	width: 30px;
 	height: 30px;
-}
-/*-------------------- Historial Tabla ----------------- */
-.btnElecT{
-    margin-left: 65%;
-}
-
-.table{
-    grid-column: 1/4;
-    width: 80%;
-    padding-left: 8%;
-}
-
-.contT{
-    width: 70%;
 }
 
 

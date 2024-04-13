@@ -13,7 +13,7 @@
 <body>
     <?= $navbar ?>
         <div class="formC2">
-            <form action="<?= base_url('vehicle/registerFins') ?>" method="POST">
+            <form class="form" action="<?= base_url('vehicle/registerFins') ?>" method="POST">
             <?php if ($vehi){ ?>
 					<?php foreach ($vehi as $item): ?>
                 <div class="titleF">

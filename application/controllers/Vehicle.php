@@ -170,14 +170,13 @@ class Vehicle extends CI_Controller{
         $level = 'M';
         $frameSize = 3;
 
-        
         if($this->session->userdata('is_logged')){
             $license = $this->input->post('licenseP');
             $type = $this->input->post('type');
             $color = $this->input->post('color');
             $date_E = $this->input->post('date_E');
             $time_E = $this->input->post('time_E');
-
+            
             $data = array(
                 'licensePlate' => $license,
                 'type' => $type,
@@ -196,19 +195,41 @@ class Vehicle extends CI_Controller{
                 'Placa' => $license
             ));
 
-            if (!$this->Vehicles->create($data, $fechaEn)) {
-                $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
-                redirect('vehicle/registerEn');
+            if(!$this->Vehicles->consultVe($license)){
+                if (!$this->Vehicles->create($data, $fechaEn)) {
+                    $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
+                    redirect('vehicle/showVehicles');
+                }
+                $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
+                $filename = $dir.$license.'.png';
+                QRcode::png($qr, $filename, $level, $size,$frameSize);
+                $data = array(
+                    'qrCode' => $filename,
+                    'license' => $license,
+                );
+                $this->load->view('vehicle/qrEntrance', $data);
+               
+            }else{
+                if(!$this->Vehicles->consultHist($license)){
+                    if (!$this->Vehicles->createHistory($fechaEn)) {
+                        $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
+                        redirect('vehicle/showVehicles');
+                    }
+                    $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
+                    $filename = $dir.$license.'.png';
+                    QRcode::png($qr, $filename, $level, $size,$frameSize);
+                    $data = array(
+                        'qrCode' => $filename,
+                        'license' => $license,
+                    );
+                    $this->load->view('vehicle/qrEntrance', $data);
+                }else{
+                    $this->session->set_flashdata('error', 'El vehículo ya se encuentra en el parqueadero, por favor registre la salida');
+                    redirect('vehicle/showVehicles');
+                }
             }
-            $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
-            $filename = $dir.$license.'.png';
+           
 
-            QRcode::png($qr, $filename, $level, $size,$frameSize);
-            $data = array(
-                'qrCode' => $filename,
-                'license' => $license,
-            );
-            $this->load->view('vehicle/qrEntrance', $data);
            
 
         }else{
@@ -232,5 +253,16 @@ class Vehicle extends CI_Controller{
         redirect('vehicle/showVehicles');
      }
     
+     //Eliminar historal vehiculo
+     public function dropHisV(){
+        $idDetails = $this->input->post("idDetails");
+        if(!$this->Vehicles->dropHisV($idDetails)){
+            $this->session->set_flashdata('msg', 'Se ha eliminado con éxito');
+            redirect('vehicle/showHistVehicles');
+        }
+            $this->session->set_flashdata('error', 'Ha ocurrido un error al eliminarlo, intenta de nuevo');
+            redirect('vehicle/showHistVehicles');
+     
+    }
 }
 ?>

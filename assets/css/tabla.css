@@ -1,4 +1,18 @@
 
+/*-------------------- Historial Tabla ----------------- */
+.btnElecT{
+    margin-left: 65%;
+}
+
+.table{
+    grid-column: 1/4;
+    width: 80%;
+    padding-left: 8%;
+}
+
+.contT{
+    width: 70%;
+}
 /*Tabla*/
 
 .contT{
@@ -116,23 +130,20 @@
 /*button*/
 
 .table .contT tbody td .button1{
+	height: 35px;
+	width: 90%;
 	margin-top: -10px;
-	position: relative;
-	padding: 10px 13px 10px 13px;
+	text-align: center;
 	border: none;
-	background: var(--colorL);
 	border-radius: 2rem;
 	font-family: var(--body-font);
-	color:var(--color1);
+	color:var(--colorWhite);
 	font-size: 14px;
+	cursor: pointer;
 }
 
-.table.contT tbody td .btnact{
-	width: 60%;
-	background: var(--colorVe);
-}
 
-table.contT tbody td .btnelm{
-	width: 70%;
-	background: var(--colorGr);
+
+.btnelm{
+	background: var(--colorGrey);
 }

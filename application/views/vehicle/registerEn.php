@@ -18,7 +18,7 @@
         </div>
 
         <div class="formC">
-            <form action="<?= base_url('vehicle/registerEnt') ?>" method="POST">
+            <form class="form" action="<?= base_url('vehicle/registerEnt') ?>" method="POST">
                 <div class="titleF">
                     <h2>Registrar Entrada </h2>
                     <div class="line lineF"></div>

@@ -51,6 +51,10 @@
                         <?php } else if($item->type == "Moto") {?>
                             <img src="<?= base_url('./assets/img/motocycle.svg')?>">
                         <?php } ?>
+                        <form action="<?= base_url('vehicle/dropHisV')?>" method="post">
+							<input type="hidden" name="idDetails" value="<?= $item->idDetails?>">
+							<button class="btnElm" type="submit">Eliminar</button>
+						</form>
                     </div>
                     
                     <div class="space2">
