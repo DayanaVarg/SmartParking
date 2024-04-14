@@ -213,7 +213,7 @@ class Vehicle extends CI_Controller{
                 'licensePlate' => $license,
                 'type' => $type,
                 'color' => $color,
-		'state' => 1
+		        'state' => 1
             );
 
             $fechaEn = array(
@@ -230,12 +230,12 @@ class Vehicle extends CI_Controller{
 
             if(!$this->Vehicles->consultVe($license)){
                 if(!$this->Vehicles->consultVeA($license)){
-			if (!$this->Vehicles->create($data, $fechaEn)) {
+			        if (!$this->Vehicles->create($data, $fechaEn)) {
                         $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
                         redirect('vehicle/showVehicles');
                     }
-                    	$this->session->set_flashdata('msg', 'Se ha registrado con éxito');
-	        	$filename = $dir.$license.'.png';
+                    $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
+	        	    $filename = $dir.$license.'.png';
 	                QRcode::png($qr, $filename, $level, $size,$frameSize);
 	                $data = array(
 	                    'qrCode' => $filename,
@@ -259,9 +259,11 @@ class Vehicle extends CI_Controller{
                     $filename = $dir.$license.'.png';
                     QRcode::png($qr, $filename, $level, $size,$frameSize);
                     $data = array(
-                        'qrCode' => $filename,
-                        'license' => $license,
-                    );
+	                    'qrCode' => $filename,
+	                    'license' => $license,
+	                    'type' => $type,
+	                    'color' => $color,
+	                );
                     $this->load->view('vehicle/qrEntrance', $data);
                 }else{
                     $this->session->set_flashdata('error', 'El vehículo ya se encuentra en el parqueadero, por favor registre la salida');
