@@ -213,6 +213,7 @@ class Vehicle extends CI_Controller{
                 'licensePlate' => $license,
                 'type' => $type,
                 'color' => $color,
+		'state' => 1
             );
 
             $fechaEn = array(
