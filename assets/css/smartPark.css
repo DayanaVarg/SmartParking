@@ -558,5 +558,23 @@ body{
 	height: 30px;
 }
 
+/* ---------------------- Lista Vehiculos -------------------------*/
+
+.container2{
+    padding-bottom: 20%;
+    grid-auto-rows: minmax(240, auto);
+    grid-template-rows: 190px repeat(auto-fill, minmax(240px, auto));
+}
+/*Card*/
+
+.card2{
+    background-color: var(--colorWhite);
+    height: 250px;
+ 
+}
+
+.btnActu{
+    background-color: var(--colorG);
+}
 
 

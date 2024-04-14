@@ -1,18 +1,14 @@
 
 .botonespace{
-    position: absolute;
-    left: 85% ;
-    margin-top: 4.3%;
-
+  margin-left:10%;
 }
     
 .buttonR {
-    position: relative;
     width: 100px;
     font-weight: 400;
     font-family: var(--body-font);
     font-size: 15px;
-    background: var(--colorVe);
+    background: var(--colorG);
     color: white;
     padding-block: 8px;
     border-radius: 8px;
@@ -40,8 +36,8 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    max-width: 550px;
-    padding: 35px;
+    width: 450px;
+    padding:20px 20px 20px 30px ;
     border-radius: 20px;
     position: absolute;
     background: linear-gradient(0deg, rgb(238, 238, 238) 0%, rgb(244, 250, 255) 100%);
@@ -70,7 +66,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    color: var(--colorL);
+    color: var(--color1);
 }
 
 .flex {
@@ -96,7 +92,7 @@
 
 .formModal label .input+span {
     font-weight: 500;
-    color: #6b6b6b;
+    color:var(--color1);
     position: absolute;
     left: 10px;
     top: 10px;
@@ -108,7 +104,7 @@
 
 .formModal label .input:focus+span,
 .formModal label .input:valid+span {
-    color: var(--colorL);
+    color: var(--color2);
     top: 6px;
     font-size: 0.8em;
     font-weight: 600;
@@ -116,7 +112,7 @@
 
 .formModal .input:focus {
     outline: none;
-    border-inline: 3px solid var(--colorL);
+    border-inline: 3px solid var(--color2);
 }
 
 .input {
@@ -130,7 +126,7 @@
     font-size: 15px;
     font-family: var(--body-font);
     font-weight: bold;
-    background: var(--colorL);
+    background: var(--color4);
     color: white;
     padding-block: 15px;
     margin: 30px auto;
@@ -140,6 +136,6 @@
 }
 
 .submit:hover {
-    background-color: var(--colorHover);
+    background-color: var(--color2);
     transform: scale(1.06);
 }

@@ -43,6 +43,14 @@ class Vehicles extends CI_Model {
         }return $vehicle->result();
     }
 
+    //consultar vehiculo inactivo
+    public function consultVeA($license){
+        $vehicle =  $this->db->get_where('vehicle', array('vehicle.licensePlate' => $license, 'vehicle.state' => true));
+        if(!$vehicle->result()){
+            return false;
+        }return $vehicle->result();
+    }
+
     //consultar vehiculo sin salida
     public function consultHist($FK_licensePlate){
         $this->db->join('vehicle','vehicle.licensePlate  = activitydetails.FK_licensePlate ');
@@ -105,10 +113,49 @@ class Vehicles extends CI_Model {
         return $vehicle->result();
     }
 
+    //eliminar historial de vehículo
     public function dropHisV($idDetails){
         $this->db->delete('activitydetails', array('idDetails' => $idDetails));
     }
 
+    //listar todos los vehículos
+    public function listVehi(){
+        $vehicle = $this->db->get('vehicle');
+         
+        if(!$vehicle->result()){
+            return false;
+        }
+        return $vehicle->result();
+    }
+
+    //inactivar Vehiculo
+    public function inactVeh($license){
+        $this->db->set('state', 0);
+        $this->db->where('licensePlate', $license);
+        if($this->db->update('vehicle', $data)){
+            return true;
+        }
+        return false;
+    }
+
+     //activar Vehiculo
+     public function actVeh($license){
+        $this->db->set('state', 1);
+        $this->db->where('licensePlate', $license);
+        if($this->db->update('vehicle', $data)){
+            return true;
+        }
+        return false;
+    }
+
+    //Actualizar Vehiculo
+    public function updateV($data,$license){
+        $this->db->where('licensePlate', $license);
+        if($this->db->update('vehicle', $data)){
+            return true;
+        }
+        return false;
+    }
 }
 
 ?>
