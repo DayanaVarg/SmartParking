@@ -206,6 +206,8 @@ class Vehicle extends CI_Controller{
                 $data = array(
                     'qrCode' => $filename,
                     'license' => $license,
+                    'type' => $type,
+                    'color' => $color,
                 );
                 $this->load->view('vehicle/qrEntrance', $data);
                
@@ -228,10 +230,7 @@ class Vehicle extends CI_Controller{
                     redirect('vehicle/showVehicles');
                 }
             }
-           
-
-           
-
+  
         }else{
             redirect('login');
         }
