@@ -13,7 +13,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mobius1/vanilla-Datatables@latest/vanilla-dataTables.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/mobius1/vanilla-Datatables@latest/vanilla-dataTables.min.css">
 
-    <title>Historial Vehículos</title>
+    <title>Vehículos</title>
 </head>
 <body>
     <?= $navbar ?>
@@ -37,7 +37,7 @@
         		<button id="buttonR" class="buttonR">Importar</button>
     		</div>
 			<div class="Container-modal">
-				<form class="formModal" action="<?= base_url('vehicle/importHV') ?>" method="POST" enctype="multipart/form-data">
+				<form class="formModal" action="<?= base_url('vehicle/importV') ?>" method="POST" enctype="multipart/form-data">
 					<div class="closeB">+</div>
 					<p class="title">Seleccionar archivo</p>
 
@@ -59,44 +59,55 @@
 			</div>
             <div class="btnElec btnElecT">
                 <button class="btnAct"><img src="<?= base_url('./assets/img/tableIconAc.svg') ?>"></a></button>
-                <button class="btnDesc"><a href="<?= base_url('vehicle/showHistVehicles') ?>"><img src="<?= base_url('./assets/img/cardIconAc.svg') ?>"></a></button>
+                <button class="btnDesc"><a href="<?= base_url('vehicle/showVehiclesL') ?>"><img src="<?= base_url('./assets/img/cardIconAc.svg') ?>"></a></button>
             </div>
         </div>
       
-        <div class="table">       
-        <table class="contT" id="datat">
-				<h1 class="titulo">Historial Vehículos</h1>
+        <div class="table tableV">       
+        <table class="contT contTa" id="datat">
+				<h1 class="titulo">Vehículos</h1>
 				<thead >
 					<tr>
 						<th>Placa</th>
 						<th>Tipo</th>
 						<th>Color</th>
-						<th>Fecha Entrada</th>
-						<th>Hora Entrada</th>
-						<th>Fecha Salida</th>
-						<th>Hora Salida</th>
-						<th>Total Pago</th>
-						<th id="act1">Acciones</th>
+						<th>Estado</th>
+						<th id="act1" colspan="2">Acciones</th>
 					</tr>
 				</thead>	
 				<tbody>
 				<?php if ($vehi){ ?>
 					<?php foreach ($vehi as $item): ?>
 						<tr>
-							<td><?= $item->FK_licensePlate?></td>
+							<td><?= $item->licensePlate?></td>
 							<td><?= $item->type ?></td>
 							<td><?= $item->color?></td>
-							<td><?= $item->date_Entrance?></td>
-							<td><?= $item->time_Entrance?></td>
-							<td><?= $item->date_Finish?></td>
-							<td><?= $item->time_Finish?></td>
-							<td>$<?= $item->totalCost?></td>
+							<?php if($item->state == 1){?>
+								<td>Activo</td>
+							<?php }else{?>
+								<td>Inactivo</td>
+							<?php } ?>
 							<td id="act">
 								<form action="<?= base_url('vehicle/dropHisV')?>" method="post">
-									<input type="hidden" name="idDetails" value="<?= $item->idDetails?>">
-									<button class="button1 btnelm" type="submit">Eliminar</button>
+									<input type="hidden" name="idDetails" value="<?= $item->licensePlate?>">
+									<button class="button2 btnActu" type="submit">Actualizar</button>
 								</form>
 							</td>
+							<?php if($item->state == 1){?>
+							<td id="act">
+								<form action="<?= base_url('vehicle/inactVeh')?>" method="post">
+									<input type="hidden" name="license" value="<?= $item->licensePlate?>">
+									<button class="button2 btnelm" type="submit">Inactivar</button>
+								</form>
+							</td>
+							<?php }else{?>
+								<td id="act">
+								<form action="<?= base_url('vehicle/actVeh')?>" method="post">
+									<input type="hidden" name="license" value="<?= $item->licensePlate?>">
+									<button class="button2 btnActu" type="submit">Activar</button>
+								</form>
+							</td>
+							<?php } ?>
 						</tr>
 					<?php endforeach; ?>
 				<?php }else{?>

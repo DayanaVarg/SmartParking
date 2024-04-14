@@ -1,6 +1,6 @@
 <?php
 require_once APPPATH.'../phpqrcode/qrlib.php';
-
+require 'vendor/autoload.php';
 
 class Vehicle extends CI_Controller{
 
@@ -12,6 +12,8 @@ class Vehicle extends CI_Controller{
         date_default_timezone_set('America/Bogota');
 	}
 
+//views
+    
     //Mostrar vehiculos sin salida
     public function showVehicles(){
         if($this->session->userdata('is_logged')){
@@ -29,7 +31,6 @@ class Vehicle extends CI_Controller{
         }
     }
 
-    //views
     //Formulario registro de entrada
     public function registerEn(){
         if($this->session->userdata('is_logged')){
@@ -98,7 +99,7 @@ class Vehicle extends CI_Controller{
                 $data = array(
                     'navbar' => $this->load->view('layout/navbar', '', TRUE),
                     'footer' => $this->load->view('layout/footer', '', TRUE),
-                    'alerta' => $alerta, // Pasar el mensaje de alerta a la vista
+                    'alerta' => $alerta, 
                 );
                 $this->load->view('vehicle/registerFin', $data);
                 return; 
@@ -134,6 +135,7 @@ class Vehicle extends CI_Controller{
                 'navbar' => $this->load->view('layout/navbar', '', TRUE),
 				'footer'=>$this->load->view('layout/footer', '', TRUE),
                 'vehi' => $this->Vehicles->showHistVehicles(),
+                'script_url' => base_url('assets/js/exportHisVehi.js') 
             );
             $this->load->view('vehicle/vehicleHistTable', $data);
         }else{
@@ -157,7 +159,37 @@ class Vehicle extends CI_Controller{
         }
     }
 
-    //functions
+    //Listado de vehiculos
+    public function showVehiclesL(){
+        if($this->session->userdata('is_logged')){
+            $data = array(
+                'navbar' => $this->load->view('layout/navbar', '', TRUE),
+				'footer'=>$this->load->view('layout/footer', '', TRUE),
+                'vehi' => $this->Vehicles->listVehi(),
+                'script_url' => base_url('assets/js/function.js') 
+            );
+            $this->load->view('vehicle/vehicleList', $data);
+        } else{
+            redirect('login');
+        }
+    }
+
+    //Listado de Vehículos tabla
+    public function showListVehiclesT(){
+        if($this->session->userdata('is_logged')){
+            $data = array(
+                'navbar' => $this->load->view('layout/navbar', '', TRUE),
+				'footer'=>$this->load->view('layout/footer', '', TRUE),
+                'vehi' => $this->Vehicles->listVehi(),
+                'script_url' => base_url('assets/js/exportVehi.js') 
+            );
+            $this->load->view('vehicle/vehicleListTable', $data);
+        } else{
+            redirect('login');
+        }
+    }
+
+//------------------------------------ functions -------------------------------------------
     //Registrar entrada de vehiculo
     public function registerEnt(){
         $dir = 'temp/';
@@ -196,9 +228,23 @@ class Vehicle extends CI_Controller{
             ));
 
             if(!$this->Vehicles->consultVe($license)){
-                if (!$this->Vehicles->create($data, $fechaEn)) {
-                    $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
+
+                if(!$this->Vehicles->consultVeA($license)){
+                    $this->session->set_flashdata('error', 'El vehículo se encuentra inactivo');
                     redirect('vehicle/showVehicles');
+                }else{
+                    if (!$this->Vehicles->create($data, $fechaEn)) {
+                        $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
+                        redirect('vehicle/showVehicles');
+                    }
+                    $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
+                    $filename = $dir.$license.'.png';
+                    QRcode::png($qr, $filename, $level, $size,$frameSize);
+                    $data = array(
+                        'qrCode' => $filename,
+                        'license' => $license,
+                    );
+                    $this->load->view('vehicle/qrEntrance', $data);   
                 }
                 $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
                 $filename = $dir.$license.'.png';
@@ -239,29 +285,230 @@ class Vehicle extends CI_Controller{
      //Registrar salida de vehiculo
 
      public function registerFins(){
-        $idDetails = $this->input->post('idDetails');
-        $date_Finish = $this->input->post('date_Finish');
-        $time_Finish = $this->input->post('time_Finish');
-        $totalCost = $this->input->post('totalCos');
+        if($this->session->userdata('is_logged')){
+            $idDetails = $this->input->post('idDetails');
+            $date_Finish = $this->input->post('date_Finish');
+            $time_Finish = $this->input->post('time_Finish');
+            $totalCost = $this->input->post('totalCos');
 
-        if (!$this->Vehicles->updateF($idDetails, $date_Finish, $time_Finish, $totalCost)) {
-            $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
-            redirect('vehicle/registerEn');
+            if (!$this->Vehicles->updateF($idDetails, $date_Finish, $time_Finish, $totalCost)) {
+                $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
+                redirect('vehicle/registerEn');
+            }
+            $this->session->set_flashdata('msg', 'Se ha registrado salida con éxito');
+            redirect('vehicle/showVehicles');
+        }else{
+            redirect('login');
         }
-        $this->session->set_flashdata('msg', 'Se ha registrado salida con éxito');
-        redirect('vehicle/showVehicles');
      }
     
      //Eliminar historal vehiculo
      public function dropHisV(){
-        $idDetails = $this->input->post("idDetails");
-        if(!$this->Vehicles->dropHisV($idDetails)){
-            $this->session->set_flashdata('msg', 'Se ha eliminado con éxito');
-            redirect('vehicle/showHistVehicles');
+        if($this->session->userdata('is_logged')){
+            $idDetails = $this->input->post("idDetails");
+            if(!$this->Vehicles->dropHisV($idDetails)){
+                $this->session->set_flashdata('msg', 'Se ha eliminado con éxito');
+                redirect('vehicle/showHistVehicles');
+            }
+                $this->session->set_flashdata('error', 'Ha ocurrido un error al eliminarlo, intenta de nuevo');
+                redirect('vehicle/showHistVehicles');
+        }else{
+            redirect('login');
         }
-            $this->session->set_flashdata('error', 'Ha ocurrido un error al eliminarlo, intenta de nuevo');
-            redirect('vehicle/showHistVehicles');
-     
     }
+
+    //importar historial de vehiculos
+    
+	function uploadDoc()
+	{
+		$uploadPath = 'uploads/';
+		if(!is_dir($uploadPath))
+		{
+			mkdir($uploadPath,0777,TRUE); 
+		}
+
+		$config['upload_path']=$uploadPath;
+		$config['allowed_types'] = 'csv|xlsx|xls';
+		$config['max_size'] = 1000000000;
+		$this->load->library('upload',$config);
+		$this->upload->initialize($config);
+		if($this->upload->do_upload('file'))
+		{
+			$fileData = $this->upload->data();
+			return $fileData['file_name'];
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	
+	//Importar historial de vehículos
+
+	public function importHV(){
+		if($this->session->userdata('is_logged')){
+			if($_SERVER['REQUEST_METHOD']=='POST'){
+				$upload_status =  $this->uploadDoc();
+			if($upload_status!=false)
+			{
+				$inputFileName = 'uploads/'.$upload_status;
+				$inputTileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+				$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputTileType);
+				$spreadsheet = $reader->load($inputFileName);
+				$sheet = $spreadsheet->getSheet(0);
+				$count_Rows = 0;
+				$firstRow = true;
+				foreach($sheet->getRowIterator() as $row)
+				{
+					if ($firstRow) {
+						$firstRow = false;
+						continue; 
+					}
+					$license = $spreadsheet->getActiveSheet()->getCell('A'.$row->getRowIndex());
+					$type =$spreadsheet->getActiveSheet()->getCell('B'.$row->getRowIndex());
+					$color =$spreadsheet->getActiveSheet()->getCell('C'.$row->getRowIndex());
+					$DaEntrance =$spreadsheet->getActiveSheet()->getCell('D'.$row->getRowIndex())->getValue();
+					$TiEntrance =$spreadsheet->getActiveSheet()->getCell('E'.$row->getRowIndex())->getValue();
+                    $DaFinish =$spreadsheet->getActiveSheet()->getCell('F'.$row->getRowIndex())->getValue();
+                    $TiFinish =$spreadsheet->getActiveSheet()->getCell('G'.$row->getRowIndex())->getValue();
+                    $totalCostCell = $spreadsheet->getActiveSheet()->getCell('H'.$row->getRowIndex())->getValue();
+                    $totalCost = str_replace(['$', '.'], '', $totalCostCell);
+                   
+				   
+                    $data = array(
+                        'licensePlate' => $license,
+                        'type' => $type,
+                        'color' => $color,
+                    );
+        
+                    $fechaEn = array(
+                        'date_Entrance' => $DaEntrance,
+                        'time_Entrance' => $TiEntrance,
+                        'date_Finish' => $DaFinish,
+                        'time_Finish' => $TiFinish,
+                        'totalCost' => $totalCost,
+                        'FK_licensePlate' => $license
+                    );
+
+                    if(!$this->Vehicles->consultVe($license)){
+                        if (!$this->Vehicles->create($data, $fechaEn)) {
+                            $this->session->set_flashdata('error', 'Ha ocurrido un error');
+                            redirect('vehicle/showHistVehicles');
+                        }           
+                    }else{
+                        if (!$this->Vehicles->createHistory($fechaEn)) {
+                            $this->session->set_flashdata('error', 'Ha ocurrido un error');
+                            redirect('vehicle/showHistVehicles');
+                        }
+                    }
+					$count_Rows++;
+				}
+				$this->session->set_flashdata('msg','Importado con éxito');
+				redirect(base_url('vehicle/showHistVehicles'));
+			}
+			else
+			{
+				$this->session->set_flashdata('error','Ha ocurrido un error');
+				redirect(base_url('vehicle/showHistVehicles'));
+			}
+			}
+		}else{
+			redirect('login');
+		}
+	}
+
+    
+	
+	//Importar vehículos
+
+	public function importV(){
+		if($this->session->userdata('is_logged')){
+			if($_SERVER['REQUEST_METHOD']=='POST'){
+				$upload_status =  $this->uploadDoc();
+			if($upload_status!=false)
+			{
+				$inputFileName = 'uploads/'.$upload_status;
+				$inputTileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+				$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputTileType);
+				$spreadsheet = $reader->load($inputFileName);
+				$sheet = $spreadsheet->getSheet(0);
+				$count_Rows = 0;
+				$firstRow = true;
+                foreach($sheet->getRowIterator() as $row)
+                {
+                    if ($firstRow) {
+                        $firstRow = false;
+                        continue; 
+                    }
+                    $license = $spreadsheet->getActiveSheet()->getCell('A'.$row->getRowIndex())->getValue();
+                    $type = $spreadsheet->getActiveSheet()->getCell('B'.$row->getRowIndex())->getValue();
+                    $color = $spreadsheet->getActiveSheet()->getCell('C'.$row->getRowIndex())->getValue();
+                    $state = $spreadsheet->getActiveSheet()->getCell('D'.$row->getRowIndex())->getValue();
+                    
+                    if($state == "Activo"){
+                        $state = 1;
+                    }else if($state == "Inactivo"){
+                        $state = 0;
+                    }
+
+                    $data = array(
+                        'licensePlate' => $license,
+                        'type' => $type,
+                        'color' => $color,
+                        'state' => $state,
+                    );
+                    $this->db->insert('vehicle',$data);
+					$count_Rows++;
+                }
+                
+				$this->session->set_flashdata('msg','Importado con éxito');
+				redirect(base_url('vehicle/showVehiclesL'));
+               
+			}
+			else
+			{
+				$this->session->set_flashdata('error','Ha ocurrido un error');
+				redirect(base_url('vehicle/showVehiclesL'));
+			}
+			}
+		}else{
+			redirect('login');
+		}
+	}
+
+
+     //Inactivar vehiculo
+     public function inactVeh(){
+        if($this->session->userdata('is_logged')){
+            $license = $this->input->post("license");
+            if(!$this->Vehicles->inactVeh($license)){
+                $this->session->set_flashdata('error', 'Ha ocurrido un error al inactivarlo, intenta de nuevo');
+                redirect('vehicle/showVehiclesL');
+            }
+                $this->session->set_flashdata('msg', 'Se ha inactivado con éxito');
+                redirect('vehicle/showVehiclesL');
+                
+        }else{
+            redirect('login');
+        }
+    }
+
+       //Activar vehiculo
+    public function actVeh(){
+        if($this->session->userdata('is_logged')){
+            $license = $this->input->post("license");
+            if(!$this->Vehicles->actVeh($license)){
+                $this->session->set_flashdata('error', 'Ha ocurrido un error al activarlo, intenta de nuevo');
+                redirect('vehicle/showVehiclesL');
+            }
+                $this->session->set_flashdata('msg', 'Se ha activado con éxito');
+                redirect('vehicle/showVehiclesL');
+                
+        }else{
+            redirect('login');
+        }
+    }
+	
 }
 ?>

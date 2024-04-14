@@ -35,7 +35,7 @@
 								<a href="<?= base_url('vehicle/showHistVehicles') ?>" class="nav__dropdown-item">Historial</a>
 							</div>
 							<div class="nav__dropdown-content">
-								<a href="<?= base_url('#') ?>" class="nav__dropdown-item">Listado</a>
+								<a href="<?= base_url('vehicle/showVehiclesL') ?>" class="nav__dropdown-item">Listado</a>
 							</div>
 							<div class="nav__dropdown-content">
 								<a href="<?= base_url('vehicle/registerEn') ?>" class="nav__dropdown-item">Registrar Entrada</a>
