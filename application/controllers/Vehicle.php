@@ -229,34 +229,24 @@ class Vehicle extends CI_Controller{
             ));
 
             if(!$this->Vehicles->consultVe($license)){
-
                 if(!$this->Vehicles->consultVeA($license)){
-                    $this->session->set_flashdata('error', 'El vehículo se encuentra inactivo');
-                    redirect('vehicle/showVehicles');
-                }else{
-                    if (!$this->Vehicles->create($data, $fechaEn)) {
+			if (!$this->Vehicles->create($data, $fechaEn)) {
                         $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
                         redirect('vehicle/showVehicles');
                     }
-                    $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
-                    $filename = $dir.$license.'.png';
-                    QRcode::png($qr, $filename, $level, $size,$frameSize);
-                    $data = array(
-                        'qrCode' => $filename,
-                        'license' => $license,
-                    );
-                    $this->load->view('vehicle/qrEntrance', $data);   
+                    	$this->session->set_flashdata('msg', 'Se ha registrado con éxito');
+	        	$filename = $dir.$license.'.png';
+	                QRcode::png($qr, $filename, $level, $size,$frameSize);
+	                $data = array(
+	                    'qrCode' => $filename,
+	                    'license' => $license,
+	                    'type' => $type,
+	                    'color' => $color,
+	                );
+	                $this->load->view('vehicle/qrEntrance', $data);
                 }
-                $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
-                $filename = $dir.$license.'.png';
-                QRcode::png($qr, $filename, $level, $size,$frameSize);
-                $data = array(
-                    'qrCode' => $filename,
-                    'license' => $license,
-                    'type' => $type,
-                    'color' => $color,
-                );
-                $this->load->view('vehicle/qrEntrance', $data);
+                $this->session->set_flashdata('error', 'El vehículo se encuentra inactivo');
+                redirect('vehicle/showVehicles'); 
                
             }else{
                 if(!$this->Vehicles->consultHist($license)){
