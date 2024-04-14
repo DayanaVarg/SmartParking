@@ -244,9 +244,10 @@ class Vehicle extends CI_Controller{
 	                    'color' => $color,
 	                );
 	                $this->load->view('vehicle/qrEntrance', $data);
-                }
+                }else{	
                 $this->session->set_flashdata('error', 'El vehículo se encuentra inactivo');
                 redirect('vehicle/showVehicles'); 
+		}
                
             }else{
                 if(!$this->Vehicles->consultHist($license)){
