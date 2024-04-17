@@ -1,0 +1,109 @@
+:root{
+	--Card-color1: #E4F8F0;
+	--Card-subcolor1:#C8F0DF;
+	--Card-color2:#FAF2BB ;
+	--Card-subcolor2:#D7BF21;
+	--Card-color3:#818887 ;
+	--Card-subcolor3:#A1AAA9;
+}
+
+.containerG{
+	display: grid;
+    width: 100%;
+    height: 100vh;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(20px, auto);
+	padding-left: 8%;
+	padding-top: 5%;
+	padding-bottom: 3%;
+}
+.cardG{
+	margin-top: 15%;
+	display: flex;
+	flex-direction: column;
+	border-radius: 12px;
+	margin-left: 20%;
+	height: 35%;
+	width: 45%;
+}
+
+.cardE{
+	background-color: var(--Card-color1);
+}
+
+.div1{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 30%;
+	height: 75%;
+}
+.circle{
+	background-color: var(--Card-subcolor1);
+	border-radius: 100%;
+	padding-top: 12px;
+	height: 43%;
+	width: 18%;
+	text-align: center;
+
+}
+
+.circle span{
+	font-size: 15px;
+	font-weight: bold;
+	font-family: var(--body-font);
+}
+
+.div1 img{
+	height: 70%;
+}
+
+.div2{
+	background-color: var(--Card-subcolor1) ;
+	border-radius: 0 0 12px 12px;
+	height: 25%;
+	text-align: center;
+	padding: 3%;
+}
+
+.div2 span{
+	margin-top: 0;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: var(--body-font);
+}
+/*Card vistor*/
+.cardV{
+	background-color:var(--Card-color2) ;
+	color: white;
+}
+.v{
+	background-color: var(--Card-subcolor2);
+}
+
+/*card total*/
+.cardT{
+	color: white;
+	background-color: var(--Card-color3);
+}
+.t{
+	background-color: var(--Card-subcolor3);
+}
+.grap{
+	grid-column: 1/4;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+}
+#chart_div{
+	margin-left: 2%;
+	width: 760px; 
+	height: 500px;
+}
+
+#fech_div{
+	margin-left: 1%;
+	width: 760px; 
+	height: 500px;
+	
+}

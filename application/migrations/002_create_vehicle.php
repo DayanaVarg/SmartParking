@@ -21,10 +21,6 @@ class Migration_create_vehicle extends CI_Migration{
                 'constraint' => '20',
                 'null' => FALSE,
             ),
-            'state' => array(
-                'type' => 'BOOLEAN',
-                'null' => FALSE,
-            ),
         ));
         $this->dbforge->add_key('licensePlate', TRUE);
         $this->dbforge->create_table('vehicle');

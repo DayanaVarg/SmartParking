@@ -29,7 +29,7 @@
             </div>
 	    <?php endif; ?>
         <div class="spaceBtn1">
-            <button class="btn">Estadísticas</button>
+        <a href="<?= base_url('graphs')?>"><button class="btn">Estadísticas</button></a>
         </div>
         <div class="spaceBtn2">
             <a href="<?= base_url('vehicle/registerFin')?>"><button class="btn btnR">Registrar Salida</button></a>

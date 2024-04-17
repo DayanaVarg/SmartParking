@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif; 
+}
+.invoice-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    width: 80mm; 
+    margin: auto;
+    background: white; 
+    justify-content: center;
+    align-items: center;
+    border-style: dashed;
+}
+h1 { 
+    color: #333; 
+    font-size: 30px; 
+    margin-bottom: 0;
+}
+.line{
+    width: 90%;
+    border: 1px solid;
+    border-bottom-color: black;
+    
+}
+h2 { 
+    font-size: 25px; 
+    margin-bottom: 0;
+}
+span{
+    font-weight: bold;
+}
+p { 
+    font-size: 18px; 
+}
+img {
+    width: 200px; 
+}
+
+.space {
+    width: 100%;
+    height: 75px;
+}
+
+@media print {
+    .invoice-container {
+        margin-top: 50px;
+    }
+    .no-print {
+        display: none; 
+    }
+}

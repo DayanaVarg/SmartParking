@@ -159,6 +159,7 @@ class Vehicle extends CI_Controller{
         }
     }
 
+
     //Listado de vehiculos
     public function showVehiclesL(){
         if($this->session->userdata('is_logged')){
@@ -189,6 +190,39 @@ class Vehicle extends CI_Controller{
         }
     }
 
+    
+    //consultar vehiculo
+    public function searchVeh(){
+        if($this->session->userdata('is_logged')){
+            $license = $this->input->post('license');
+            $data = array(
+                'navbar' => $this->load->view('layout/navbar', '', TRUE),
+				'footer'=>$this->load->view('layout/footer', '', TRUE),
+                'vehi' => $this->Vehicles->consultVe($license),
+                'script_url' => base_url('assets/js/function.js') 
+            );
+            $this->load->view('vehicle/vehicleList', $data);
+        } else{
+            redirect('login');
+        }
+    }
+      
+    //Vista Actualizar Vehículo
+    public function updateVeh(){
+        if($this->session->userdata('is_logged')){
+            $license = $this->input->post('license');
+            $data = array(
+                'navbar' => $this->load->view('layout/navbar', '', TRUE),
+				'footer'=>$this->load->view('layout/footer', '', TRUE),
+                'vehi' => $this->Vehicles->consultVe($license),
+                'script_url' => base_url('assets/js/function.js') 
+            );
+            $this->load->view('vehicle/updateVehicle', $data);
+        } else{
+            redirect('login');
+        }
+    }
+
 //------------------------------------ functions -------------------------------------------
     //Registrar entrada de vehiculo
     public function registerEnt(){
@@ -213,7 +247,6 @@ class Vehicle extends CI_Controller{
                 'licensePlate' => $license,
                 'type' => $type,
                 'color' => $color,
-		        'state' => 1
             );
 
             $fechaEn = array(
@@ -229,7 +262,6 @@ class Vehicle extends CI_Controller{
             ));
 
             if(!$this->Vehicles->consultVe($license)){
-                if(!$this->Vehicles->consultVeA($license)){
 			        if (!$this->Vehicles->create($data, $fechaEn)) {
                         $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
                         redirect('vehicle/showVehicles');
@@ -243,12 +275,7 @@ class Vehicle extends CI_Controller{
 	                    'type' => $type,
 	                    'color' => $color,
 	                );
-	                $this->load->view('vehicle/qrEntrance', $data);
-                }else{	
-                $this->session->set_flashdata('error', 'El vehículo se encuentra inactivo');
-                redirect('vehicle/showVehicles'); 
-		}
-               
+	                $this->load->view('vehicle/qrEntrance', $data);           
             }else{
                 if(!$this->Vehicles->consultHist($license)){
                     if (!$this->Vehicles->createHistory($fechaEn)) {
@@ -280,17 +307,26 @@ class Vehicle extends CI_Controller{
 
      public function registerFins(){
         if($this->session->userdata('is_logged')){
+            $IVA= 0.19;
             $idDetails = $this->input->post('idDetails');
             $date_Finish = $this->input->post('date_Finish');
             $time_Finish = $this->input->post('time_Finish');
-            $totalCost = $this->input->post('totalCos');
+            $subtotal = $this->input->post('totalCos');
+            $subtotal1 = $subtotal * $IVA;
+            $totalCost = $subtotal1 + $subtotal;
+            
 
             if (!$this->Vehicles->updateF($idDetails, $date_Finish, $time_Finish, $totalCost)) {
                 $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
                 redirect('vehicle/registerEn');
             }
+            $data = array(
+                'IVA' => $subtotal1,
+                'subtotal' => $subtotal,
+                'vehi' => $this->Vehicles->Fact($idDetails),
+            );
             $this->session->set_flashdata('msg', 'Se ha registrado salida con éxito');
-            redirect('vehicle/showVehicles');
+            $this->load->view('vehicle/ticketFinish', $data);           
         }else{
             redirect('login');
         }
@@ -438,19 +474,11 @@ class Vehicle extends CI_Controller{
                     $license = $spreadsheet->getActiveSheet()->getCell('A'.$row->getRowIndex())->getValue();
                     $type = $spreadsheet->getActiveSheet()->getCell('B'.$row->getRowIndex())->getValue();
                     $color = $spreadsheet->getActiveSheet()->getCell('C'.$row->getRowIndex())->getValue();
-                    $state = $spreadsheet->getActiveSheet()->getCell('D'.$row->getRowIndex())->getValue();
-                    
-                    if($state == "Activo"){
-                        $state = 1;
-                    }else if($state == "Inactivo"){
-                        $state = 0;
-                    }
 
                     $data = array(
                         'licensePlate' => $license,
                         'type' => $type,
                         'color' => $color,
-                        'state' => $state,
                     );
                     $this->db->insert('vehicle',$data);
 					$count_Rows++;
@@ -471,38 +499,23 @@ class Vehicle extends CI_Controller{
 		}
 	}
 
-
-     //Inactivar vehiculo
-     public function inactVeh(){
+    //Actualizar Vehiculo
+    public function updateV(){
         if($this->session->userdata('is_logged')){
-            $license = $this->input->post("license");
-            if(!$this->Vehicles->inactVeh($license)){
-                $this->session->set_flashdata('error', 'Ha ocurrido un error al inactivarlo, intenta de nuevo');
-                redirect('vehicle/showVehiclesL');
-            }
-                $this->session->set_flashdata('msg', 'Se ha inactivado con éxito');
-                redirect('vehicle/showVehiclesL');
-                
+            $license = $this->input->post('license');
+            $color = $this->input->post('color');
+
+            if(!$this->Vehicles->updateV($color,$license)){
+                $this->session->set_flashdata('error','Ha ocurrido un error');
+				redirect(base_url('vehicle/showVehiclesL'));
+            }else{
+                $this->session->set_flashdata('msg','Actualizado con éxito');
+				redirect(base_url('vehicle/showVehiclesL'));
+				
+			}
         }else{
             redirect('login');
         }
     }
-
-       //Activar vehiculo
-    public function actVeh(){
-        if($this->session->userdata('is_logged')){
-            $license = $this->input->post("license");
-            if(!$this->Vehicles->actVeh($license)){
-                $this->session->set_flashdata('error', 'Ha ocurrido un error al activarlo, intenta de nuevo');
-                redirect('vehicle/showVehiclesL');
-            }
-                $this->session->set_flashdata('msg', 'Se ha activado con éxito');
-                redirect('vehicle/showVehiclesL');
-                
-        }else{
-            redirect('login');
-        }
-    }
-	
 }
 ?>

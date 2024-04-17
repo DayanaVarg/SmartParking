@@ -43,14 +43,6 @@ class Vehicles extends CI_Model {
         }return $vehicle->result();
     }
 
-    //consultar vehiculo inactivo
-    public function consultVeA($license){
-        $vehicle =  $this->db->get_where('vehicle', array('vehicle.licensePlate' => $license, 'vehicle.state' => true));
-        if(!$vehicle->result()){
-            return false;
-        }return $vehicle->result();
-    }
-
     //consultar vehiculo sin salida
     public function consultHist($FK_licensePlate){
         $this->db->join('vehicle','vehicle.licensePlate  = activitydetails.FK_licensePlate ');
@@ -128,33 +120,55 @@ class Vehicles extends CI_Model {
         return $vehicle->result();
     }
 
-    //inactivar Vehiculo
-    public function inactVeh($license){
-        $this->db->set('state', 0);
-        $this->db->where('licensePlate', $license);
-        if($this->db->update('vehicle', $data)){
-            return true;
-        }
-        return false;
-    }
-
-     //activar Vehiculo
-     public function actVeh($license){
-        $this->db->set('state', 1);
-        $this->db->where('licensePlate', $license);
-        if($this->db->update('vehicle', $data)){
-            return true;
-        }
-        return false;
-    }
-
     //Actualizar Vehiculo
-    public function updateV($data,$license){
+    public function updateV($color,$license){
+        $this->db->set('color', $color);
         $this->db->where('licensePlate', $license);
-        if($this->db->update('vehicle', $data)){
+        if($this->db->update('vehicle')){
             return true;
         }
         return false;
+    }
+
+    //Contar carros
+    public function getCar(){
+		$this->db->from('vehicle');
+		$this->db->where('type', "Carro");
+		$count = $this->db->count_all_results();
+		return $count;
+	}
+
+    
+    //Contar motos
+    public function getMot(){
+		$this->db->from('vehicle');
+		$this->db->where('type', "Moto");
+		$count = $this->db->count_all_results();
+		return $count;
+	}
+
+    //Contar ganancias por mes
+	public function getfecE($mes){
+        $this->db->select('totalCost');
+		$this->db->from('activitydetails');
+		$this->db->where('date_Finish IS NOT NULL' );
+		$this->db->like('date_Entrance','-' . $mes . '-');
+		$this->db->like('date_Finish','-' . $mes . '-');
+		$query = $this->db->get();
+		return $query;
+	}
+
+    //Consultar datos factura
+    public function Fact($idDetails){
+        $this->db->join('vehicle','vehicle.licensePlate = activitydetails.FK_licensePlate' );
+        $this->db->where('totalCost IS NOT NULL' );
+        $this->db->where('idDetails', $idDetails);
+        $vehicle = $this->db->get('activitydetails');
+          
+        if(!$vehicle->result()){
+            return false;
+        }
+        return $vehicle->result();
     }
 }
 

@@ -70,27 +70,12 @@
                         </div>
 
                         <div class="columns" >
-                                <div class="column1">
-                                    <form action="<?= base_url('vehicle/updateV')?>" method="post">
-                                        <input type="hidden" name="idDetails" value="<?= $item->licensePlate?>">
+                                <div class="title">
+                                    <form action="<?= base_url('vehicle/updateVeh')?>" method="post">
+                                        <input type="hidden" name="license" value="<?= $item->licensePlate?>">
                                         <button class="btnElm btnActu" type="submit">Actualizar</button>
                                     </form>
                                 </div>
-                                <?php if($item->state == 1){ ?>
-                                <div class="column2">
-                                    <form action="<?= base_url('vehicle/inactVeh')?>" method="post">
-                                        <input type="hidden" name="license" value="<?= $item->licensePlate?>">
-                                        <button class="btnElm" type="submit">Inactivar</button>
-                                    </form>
-                                </div>
-                                <?php }else {?>
-                                <div class="column2">
-                                    <form action="<?= base_url('vehicle/actVeh')?>" method="post">
-                                        <input type="hidden" name="license" value="<?= $item->licensePlate?>">
-                                        <button class="btnElm btnActu" type="submit">Activar</button>
-                                    </form>
-                                </div>
-                                <?php } ?>
                         </div>
                     </div>
                 </div>

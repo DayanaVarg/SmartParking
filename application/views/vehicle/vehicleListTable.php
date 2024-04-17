@@ -71,8 +71,7 @@
 						<th>Placa</th>
 						<th>Tipo</th>
 						<th>Color</th>
-						<th>Estado</th>
-						<th id="act1" colspan="2">Acciones</th>
+						<th id="act1">Acciones</th>
 					</tr>
 				</thead>	
 				<tbody>
@@ -82,37 +81,17 @@
 							<td><?= $item->licensePlate?></td>
 							<td><?= $item->type ?></td>
 							<td><?= $item->color?></td>
-							<?php if($item->state == 1){?>
-								<td>Activo</td>
-							<?php }else{?>
-								<td>Inactivo</td>
-							<?php } ?>
 							<td id="act">
-								<form action="<?= base_url('vehicle/dropHisV')?>" method="post">
-									<input type="hidden" name="idDetails" value="<?= $item->licensePlate?>">
+								<form action="<?= base_url('vehicle/updateVeh')?>" method="post">
+									<input type="hidden" name="license" value="<?= $item->licensePlate?>">
 									<button class="button2 btnActu" type="submit">Actualizar</button>
 								</form>
-							</td>
-							<?php if($item->state == 1){?>
-							<td id="act">
-								<form action="<?= base_url('vehicle/inactVeh')?>" method="post">
-									<input type="hidden" name="license" value="<?= $item->licensePlate?>">
-									<button class="button2 btnelm" type="submit">Inactivar</button>
-								</form>
-							</td>
-							<?php }else{?>
-								<td id="act">
-								<form action="<?= base_url('vehicle/actVeh')?>" method="post">
-									<input type="hidden" name="license" value="<?= $item->licensePlate?>">
-									<button class="button2 btnActu" type="submit">Activar</button>
-								</form>
-							</td>
-							<?php } ?>
+							</td>							
 						</tr>
 					<?php endforeach; ?>
 				<?php }else{?>
 					<tr>
-						<td colspan="9">No existen registros</td>
+						<td colspan="5">No existen registros</td>
 					</tr>
 				<?php }?>
 				</tbody>
