@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= base_url('./assets/css/fact.css') ?>">
 	<link rel="shortcut icon" href="<?= base_url('./assets/img/smartparking.png') ?>" type="image/x-icon">
-    <title>Factura</title>
+    <title>Factura <?= $licensePlate ?></title>
 </head>
 <body>
 <div class="invoice-container">
@@ -57,8 +57,8 @@
             <div class="column2"><p>$<?= $item->totalCost?></p></div>
         </div>
         <div class="line l1"></div>
-        <p class="C1">Gracias por preferirnos</p>
         <p class="C1">Todos los derechos reservados<br> a SmartParking 2024</p>
+        <p class="C1">Gracias por preferirnos</p>
         <div class="space"></div>
         <?php endforeach ?>
     <?php } ?>

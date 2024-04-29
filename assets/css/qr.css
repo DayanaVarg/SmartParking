@@ -10,7 +10,6 @@ body {
     background: white; 
     justify-content: center;
     align-items: center;
-    border-style: dashed;
 }
 h1 { 
     color: #333; 
@@ -43,6 +42,10 @@ img {
 }
 
 @media print {
+    @page {
+        size: 80mm 240mm; /* Define el tamaño del papel */
+        margin: 0; /* Elimina los márgenes predeterminados */
+    }
     .invoice-container {
         margin-top: 50px;
     }

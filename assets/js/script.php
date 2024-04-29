@@ -1,16 +1,15 @@
 <script>
-//crea elemento
 const video = document.createElement("video");
-
-//nuestro camvas
 const canvasElement = document.getElementById("qr-canvas");
 const canvas = canvasElement.getContext("2d");
-
-//div donde llegara nuestro canvas
 const btnScanQR = document.getElementById("btn-scan-qr");
-
-//lectura desactivada
 let scanning = false;
+
+//barcode 
+let scanningBarcode = false;
+const videoBarcode = document.createElement("video");
+const canvasElementBarcode = document.getElementById("camera");
+const canvasBarcode = canvasElementBarcode.getContext("2d");
 
 //funcion para encender la camara
 const encenderCamara = () => {
@@ -49,9 +48,13 @@ function scan() {
 const cerrarCamara = () => {
   video.srcObject.getTracks().forEach((track) => {
     track.stop();
+    Quagga.stop();
   });
   canvasElement.hidden = true;
+  canvasElementBarcode.hidden = true;
   btnScanQR.hidden = false;
+  
+            scanningBarcode = false;
 };
 
 const activarSonido = () => {
@@ -101,10 +104,89 @@ qrcode.callback = (respuesta) => {
     cerrarCamara();
   }
 };
-//evento para mostrar la camara sin el boton 
-window.addEventListener('load', (e) => {
-  encenderCamara();
-})
+
+//funciones barcode
+
+const encenderCamaraB = () => {
+    navigator.mediaDevices
+        .getUserMedia({ video: { facingMode: "environment" } })
+        .then(function (stream) {
+            scanningBarcode = true;
+            btnScanQR.hidden = true;
+            canvasElementBarcode.hidden = false;
+            videoBarcode.setAttribute("playsinline", true);
+            videoBarcode.srcObject = stream;
+            videoBarcode.play();
+            tickBarcode();
+            escanearBarcode();
+        });
+}
+
+function tickBarcode() {
+    canvasElementBarcode.height = videoBarcode.videoHeight;
+    canvasElementBarcode.width = videoBarcode.videoWidth;
+    canvasBarcode.drawImage(videoBarcode, 0, 0, canvasElementBarcode.width, canvasElementBarcode.height);
+    scanningBarcode && requestAnimationFrame(tickBarcode);
+}
+
+
+const escanearBarcode = () => {
+    Quagga.init({
+        inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector('#camera')
+        },
+        decoder: {
+            readers: ["code_128_reader", "ean_reader", "upc_reader"]
+        }
+    }, function (err) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        Quagga.start();
+    });
+
+    Quagga.onDetected(function (data) {
+        if (scanningBarcode) {
+          Quagga.stop();
+          scanningBarcode = false;
+          if(data.codeResult && data.codeResult.code && data.codeResult.code.startsWith('*')) {
+            var code = data.codeResult.code.substring(1);
+            var mensaje = `
+            <p class="p1">Placa: <span class="dato">${code}</span></p>`
+            Swal.fire({
+            title: 'Vehiculo',
+            html: mensaje,
+            icon: 'info',
+            iconColor: '#544A0D',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#d7bf21',
+            }).then((result) => {
+            if (result.isConfirmed) {
+              var url = "<?= base_url('vehicle/registerFE')?>?placa=" + encodeURIComponent(code);
+              window.location.href = url;
+            }
+            }); 
+            
+          }else{
+            Swal.fire({
+            title: 'Error',
+            text: 'El código es inválido',
+            icon: 'error',
+            dangerMode: true,
+            confirmButtonText: 'Cerrar',
+            confirmButtonColor: '#8E98A8',
+            });
+          }
+          Quagga.stop();
+          activarSonido();
+        cerrarCamara();     
+        } 
+    });
+};
+
 </script>
 
 

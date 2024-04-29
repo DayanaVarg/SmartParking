@@ -21,15 +21,17 @@
         </div>
   <div class="row justify-content-center">
     <div class="col-sm-8 shadow p-4">
-      <h5 class="text-center">Escanear codigo QR de entrada</h5>
+      <h5 class="text-center">Escanear codigo QR o Barcode de entrada</h5>
         <div class="row text-center">
             <a id="btn-scan-qr" href="#">
             <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg" class="img-fluid text-center" width="175">
             </a>
             <canvas hidden="" id="qr-canvas" class="img-fluid"></canvas>
+            <canvas hidden="" id="camera" class="img-fluid"></canvas>
         </div>
         <div class="row mx-3 my-3">
-            <button class="btnO mb-2" onclick="encenderCamara()">Registrar Salida</button>
+            <button class="btnO mb-2" onclick="encenderCamara()">Escanear QR</button>
+            <button class="btnO mb-2"  onclick="encenderCamaraB()">Escanear Barcode</button>
             <button class="bntCa btnO" onclick="cerrarCamara()">Cancelar</button>
         </div>
     </div>
@@ -52,7 +54,11 @@
     </script>
 <?php endif; ?>
   <?= $footer ?>
+  
+  <script src="<?= base_url('./assets/js/barcode.js')?>"></script>
   <audio id="audioScaner" src="<?= base_url('./assets/sonido.mp3')?>"></audio>
+  <script src="<?= base_url('./assets/js/quagga.min.js')?>"></script>
+ 
   <?php include('./assets/js/script.php'); ?>
 </body>
 </html>

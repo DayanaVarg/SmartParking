@@ -1,7 +1,7 @@
 <?php
 require_once APPPATH.'../phpqrcode/qrlib.php';
 require 'vendor/autoload.php';
-
+use Picqer\Barcode\BarcodeGeneratorPNG;
 class Vehicle extends CI_Controller{
 
     public function __construct(){
@@ -110,6 +110,53 @@ class Vehicle extends CI_Controller{
         }else{
             redirect('login');
         }
+    }
+
+
+    //registrar salida barcode
+    public function registerFE(){
+        if($this->session->userdata('is_logged')){
+            $FK_licensePlate = $this->input->get('placa');
+            if($this->Vehicles->consultVe($FK_licensePlate)){
+                if($this->Vehicles->consultHist($FK_licensePlate)){
+                    $data = array(
+                        'navbar' => $this->load->view('layout/navbar', '', TRUE),
+                        'footer'=>$this->load->view('layout/footer', '', TRUE),
+                        'vehi' =>$this->Vehicles->consultHist($FK_licensePlate),
+                        'fecha_actual'=>date('Y-m-d'),
+                        'hora_actual'=>date('H:i:s'),
+                    );
+                    $this->load->view('vehicle/registerFormF', $data);
+                }else{
+                    $alerta = array(
+                        'tipo' => 'error',
+                        'mensaje' => '¡El vehiculo ya cuenta con la salida!'
+                    );
+                    $data = array(
+                        'navbar' => $this->load->view('layout/navbar', '', TRUE),
+                        'footer' => $this->load->view('layout/footer', '', TRUE),
+                        'alerta' => $alerta, 
+                    );
+                    $this->load->view('vehicle/registerFin', $data);
+                    return; 
+                }
+            }else{
+                $alerta = array(
+                    'tipo' => 'error',
+                    'mensaje' => '¡El vehiculo no existe!'
+                );
+                $data = array(
+                    'navbar' => $this->load->view('layout/navbar', '', TRUE),
+                    'footer' => $this->load->view('layout/footer', '', TRUE),
+                    'alerta' => $alerta, 
+                );
+                $this->load->view('vehicle/registerFin', $data);
+                return; 
+            }
+        }else{
+            redirect('login');
+        }
+
     }
 
     //Vista Historial de vehículos
@@ -225,7 +272,7 @@ class Vehicle extends CI_Controller{
 
 //------------------------------------ functions -------------------------------------------
     //Registrar entrada de vehiculo
-    public function registerEnt(){
+    public function registerEntQr(){
         $dir = 'temp/';
 
         if(!file_exists($dir)){
@@ -302,6 +349,88 @@ class Vehicle extends CI_Controller{
             redirect('login');
         }
     }
+
+    //Registrar entrada de vehiculo barcode
+    public function registerEntBar(){
+        $dir = 'temp/';
+
+        if(!file_exists($dir)){
+            mkdir($dir);
+        }
+
+        if($this->session->userdata('is_logged')){
+            $license = $this->input->post('licenseP');
+            $type = $this->input->post('type');
+            $color = $this->input->post('color');
+            $date_E = $this->input->post('date_E');
+            $time_E = $this->input->post('time_E');
+            
+            $data = array(
+                'licensePlate' => $license,
+                'type' => $type,
+                'color' => $color,
+            );
+
+            $fechaEn = array(
+                'date_Entrance' => $date_E,
+                'time_Entrance' => $time_E,
+                'FK_licensePlate' => $license
+            );
+
+            $text = '*' . $license;
+
+            if(!$this->Vehicles->consultVe($license)){
+			        if (!$this->Vehicles->create($data, $fechaEn)) {
+                        $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
+                        redirect('vehicle/showVehicles');
+                    }
+                    $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
+                    $generator = new BarcodeGeneratorPNG();
+                    $barcodeImage = $generator->getBarcode($text, $generator::TYPE_CODE_128, 3, 70);
+                    
+                    $filename = $dir.$license.'.png';
+                    file_put_contents($filename, $barcodeImage);
+
+                    $data = array(
+	                    'barcodeImage' => $filename,
+	                    'license' => $license,
+	                    'type' => $type,
+	                    'color' => $color,
+                        'cod' => $text,
+	                );
+	                $this->load->view('vehicle/barcodeEntrance', $data);           
+            }else{
+                if(!$this->Vehicles->consultHist($license)){
+                    if (!$this->Vehicles->createHistory($fechaEn)) {
+                        $this->session->set_flashdata('error', 'Ha ocurrido un error al registrarlo, intenta de nuevo');
+                        redirect('vehicle/showVehicles');
+                    }
+                    $this->session->set_flashdata('msg', 'Se ha registrado con éxito');
+                    $generator = new BarcodeGeneratorPNG();
+                    $barcodeImage = $generator->getBarcode($text, $generator::TYPE_CODE_128, 3, 70);
+                    
+                    $filename = $dir.$license.'.png';
+                    file_put_contents($filename, $barcodeImage);
+
+                    $data = array(
+	                    'barcodeImage' => $filename,
+	                    'license' => $license,
+	                    'type' => $type,
+	                    'color' => $color,
+                        'cod' => $text,
+	                );
+	                $this->load->view('vehicle/barcodeEntrance', $data);           
+                }else{
+                    $this->session->set_flashdata('error', 'El vehículo ya se encuentra en el parqueadero, por favor registre la salida');
+                    redirect('vehicle/showVehicles');
+                }
+            }
+  
+        }else{
+            redirect('login');
+        }
+    }
+
 
      //Registrar salida de vehiculo
 

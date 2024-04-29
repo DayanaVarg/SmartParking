@@ -1,15 +1,23 @@
 body {
     font-family: Arial, sans-serif; 
-
 }
 .invoice-container {
     text-align: center;
     display: flex;
     flex-direction: column;
-    width: 85mm; 
     margin: auto;
+    width: 100mm; 
     background: white;
 }
+
+.line{
+    margin-top: 12px;
+    width: 90%;
+    border: 1px solid;
+    border-bottom-color: black;
+    margin-left: 13px
+}
+
 h1 { 
     letter-spacing: 1px;
     color: #333; 
@@ -22,6 +30,15 @@ h2 {
     font-size: 23px; 
     margin-bottom: 0;
 }
+.info {
+    margin-top: 10px;
+    text-align: left;
+    margin-left: 32px;
+
+}
+.info p{
+    font-size: 14px;
+}
 span{
     letter-spacing: 1px;
     font-weight: bold;
@@ -32,62 +49,32 @@ p {
     font-size: 14px; 
 }
 
-.line{
-    margin-top: 12px;
-    width: 90%;
-    border: 1px solid;
-    border-bottom-color: black;
-    margin-left: 13px
-    
+.info2{
+    margin-left: -10px;
 }
 
-.info {
-    margin-top: 10px;
-    text-align: left;
-    margin-left: 32px;
+.barcode{
+    margin-top:10%;
+    margin-left: -8px;
+    margin-bottom: 0;
 }
-.info p{
-    font-size: 14px;
+.cod{
+    letter-spacing: 3px;
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 5%;
 }
 .space {
     width: 100%;
-    height: 60px;
+    height: 75px;
 }
-
-.columns{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+.space2{
+    width: 100%;
+    height: 30px;
 }
-
-.columns p{
-    letter-spacing: 0;
-}
-.C1{
-    margin-left: 32px;
-    text-align: left;
-}
-.column2{
-    padding-left: 10px;
-}
-
-.c2{
-    margin-top: 12px;
-}
-
-.li2{
-    margin-top: 8px;
-    margin-bottom: 12px;
-    border-style: dashed;
-}
-
-.l1{
-    margin-bottom: 12px;
-    text-align: center;
-}
-
 @media print {
     @page {
-        size: 80mm 170mm; /* Define el tamaño del papel */
+        size: 80mm 150mm; /* Define el tamaño del papel */
         margin: 0; /* Elimina los márgenes predeterminados */
     }
     .invoice-container {

@@ -147,7 +147,7 @@ class Vehicles extends CI_Model {
 		return $count;
 	}
 
-    //Contar ganancias por mes
+    //Obtenemos ganancias por mes
 	public function getfecE($mes){
         $this->db->select('totalCost');
 		$this->db->from('activitydetails');

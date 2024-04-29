@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<?= base_url('./assets/css/footer.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
 	<link rel="shortcut icon" href="<?= base_url('./assets/img/smartparking.png') ?>" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Registrar entrada</title>
 </head>
 <body>
@@ -18,7 +19,7 @@
         </div>
 
         <div class="formC">
-            <form class="form" action="<?= base_url('vehicle/registerEnt') ?>" method="POST">
+            <form class="form" id="registerForm"  method="POST">
                 <div class="titleF">
                     <h2>Registrar Entrada </h2>
                     <div class="line lineF"></div>
@@ -55,5 +56,7 @@
     <?= $footer ?>
     
 <script src="<?= base_url('./assets/js/script.js') ?>"></script>
+<?php include('./assets/js/option.php'); ?>
+
 </body>
 </html>

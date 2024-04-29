@@ -368,6 +368,27 @@ body{
     cursor: pointer;
 }
 
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn-option {
+    padding: 10px 20px;
+    background-color: var(--color2);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-option:hover {
+    background-color:var(--color4);
+}
+
 /*Codigo QR */
 
 
@@ -577,4 +598,9 @@ body{
     background-color: var(--colorG);
 }
 
-
+@media screen and (max-width: 1400px) {
+    .container{
+        grid-auto-rows: minmax(250px, auto);
+        grid-template-rows: 190px repeat(auto-fill, minmax(250px, auto));    
+    }
+}

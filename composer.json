@@ -13,7 +13,9 @@
 	"require": {
 		"php": ">=5.3.7",
 		"endroid/qr-code": "*",
-		"phpoffice/phpspreadsheet": "*"
+		"phpoffice/phpspreadsheet": "*",
+		"zendframework/zend-barcode": "*",
+		"picqer/php-barcode-generator": "*"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
