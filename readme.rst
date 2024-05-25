@@ -40,7 +40,7 @@ Installation
 ************
 
 Please see the `installation section <https://codeigniter.com/userguide3/installation/index.html>`_
-of the CodeIgniter User Guide.
+of the CodeIgniter our User Guide.
 
 *******
 License
